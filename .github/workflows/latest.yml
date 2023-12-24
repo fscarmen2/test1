@@ -44,6 +44,7 @@ jobs:
       - name: Checkout code crazy-max/ghaction-xgo
         uses: actions/checkout@v4
         with:
+          repository: crazy-max/ghaction-xgo
           fetch-depth: 0
 
       - name: xgo build
