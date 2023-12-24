@@ -33,16 +33,16 @@ jobs:
           repository: crazy-max/ghaction-xgo
           fetch-depth: 0
 
-      # - name: Check the latest verion
-      #   run: |
-      #     [ -e README.md ] && NOW=$(awk '/^ - ### \*\*latest\*\*:/{print $NF}' README.md)
-      #     LATEST=$(wget -qO- "https://api.github.com/repos/SagerNet/sing-box/releases/latest" | awk -F '"' '/tag_name/{print $4}')
-      #     echo " NOW: $NOW"
-      #     echo " LATEST: $LATEST"
-      #     if [ "$NOW" != "$LATEST" ]; then
-      #       sed -i "/^ - ### \*\*latest\*\*:/s/\(.*: \).*/\1$LATEST/" README.md
-      #       echo "VERSION=$LATEST" >> $GITHUB_ENV
-      #     fi
+      - name: Check the latest verion
+        run: |
+          [ -e README.md ] && NOW=$(awk '/^ - ### \*\*latest\*\*:/{print $NF}' README.md)
+          LATEST=$(wget -qO- "https://api.github.com/repos/SagerNet/sing-box/releases/latest" | awk -F '"' '/tag_name/{print $4}')
+          echo " NOW: $NOW"
+          echo " LATEST: $LATEST"
+          if [ "$NOW" != "$LATEST" ]; then
+            sed -i "/^ - ### \*\*latest\*\*:/s/\(.*: \).*/\1$LATEST/" README.md
+            echo "VERSION=$LATEST" >> $GITHUB_ENV
+          fi
 
       # - name: Login to DockerHub
       #   if: ${{ env.VERSION != '' }}
