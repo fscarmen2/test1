@@ -30,16 +30,16 @@ jobs:
             echo "VERSION=$LATEST" >> $GITHUB_ENV
           fi
 
-      - name: Change working directory
-        if: ${{ env.VERSION != '' }}
-        run: |
-          mkdir -p build/sb
-          cd build/sb
-          git clone --branch ${{ env.VERSION }} --single-branch https://github.com/SagerNet/sing-box.git
-          ls -la
-          cd sing-box
-          export SB_COMMIT=$(git rev-parse --short HEAD)
-          export SB_VERSION=$(go run ./cmd/internal/read_tag)
+      # - name: Change working directory
+      #   if: ${{ env.VERSION != '' }}
+      #   run: |
+      #     mkdir -p build/sb
+      #     cd build/sb
+      #     git clone --branch ${{ env.VERSION }} --single-branch https://github.com/SagerNet/sing-box.git
+      #     ls -la
+      #     cd sing-box
+      #     export SB_COMMIT=$(git rev-parse --short HEAD)
+      #     export SB_VERSION=$(go run ./cmd/internal/read_tag)
 
       - name: Checkout code crazy-max/ghaction-xgo
         uses: actions/checkout@v4
@@ -49,6 +49,14 @@ jobs:
       - name: xgo build
         if: ${{ env.VERSION != '' }}
         uses: crazy-max/ghaction-xgo@v3
+        run: |
+          mkdir -p build/sb
+          cd build/sb
+          git clone --branch ${{ env.VERSION }} --single-branch https://github.com/SagerNet/sing-box.git
+          ls -la
+          cd sing-box
+          export SB_COMMIT=$(git rev-parse --short HEAD)
+          export SB_VERSION=$(go run ./cmd/internal/read_tag)
         with:
           xgo_version: latest
           go_version: latest
