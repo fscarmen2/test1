@@ -85,6 +85,7 @@ jobs:
           mv dist/dashboard-linux-arm-7 dist/dashboard-linux-arm
 
       - name: Compress dist files
+        if: ${{ env.VERSION != '' }}
         run: |
           for file in dist/*; do
             if [ -f "$file" ]; then
@@ -93,6 +94,7 @@ jobs:
           done
 
       - name: Release
+        if: ${{ env.VERSION != '' }}
         uses: ncipollo/release-action@v1
         with:
           artifacts: "dist/*.zip"
