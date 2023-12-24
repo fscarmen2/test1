@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Check the latest verion
         run: |
@@ -65,12 +63,12 @@ jobs:
           dest: dist
           prefix: sing-box
           targets: linux/amd64,linux/arm64,linux/arm-7
-          # v: true
-          # x: false
-          # race: false
-          # tags: with_quic,with_grpc,with_dhcp,with_wireguard,with_ech,with_utls,with_reality_server,with_acme,with_clash_api,with_v2ray_api,with_gvisor
-          # ldflags: -s -w --extldflags '-static -fpic' -X github.com/SagerNet/sing-box/constant.Version=$VERSION
-          # buildmode: default
+          v: true
+          x: false
+          race: false
+          tags: with_quic,with_grpc,with_dhcp,with_wireguard,with_ech,with_utls,with_reality_server,with_acme,with_clash_api,with_v2ray_api,with_gvisor
+          ldflags: -s -w --extldflags '-static -fpic' -X github.com/SagerNet/sing-box/constant.Version=$VERSION
+          buildmode: default
 
       - name: fix dist
         if: ${{ env.VERSION != '' }}
