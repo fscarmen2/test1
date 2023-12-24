@@ -80,7 +80,11 @@ jobs:
       # - name: Checkout
       #   if: ${{ env.VERSION != '' }}
       #   uses: actions/checkout@v4
-        
+
+      - name: Change working directory
+        if: ${{ env.VERSION != '' }}
+        run: cd sing-box
+
       - name: xgo build
         if: ${{ env.VERSION != '' }}
         uses: crazy-max/ghaction-xgo@v3
@@ -88,6 +92,7 @@ jobs:
           xgo_version: latest
           go_version: latest
           dest: output
+          pkg: cmd/sing-box
           prefix: sing-box
           targets: linux/amd64,linux/arm64,linux/arm-7
           v: true
