@@ -69,18 +69,13 @@ jobs:
       - name: Checkout
         if: ${{ env.VERSION != '' }}
         uses: actions/checkout@v4
-        with:
-          repository: SagerNet/sing-box
-          ref: main-next
-          path: sing-box
-          fetch-depth: 0
         
       - name: xgo build
         if: ${{ env.VERSION != '' }}
         uses: crazy-max/ghaction-xgo@v3
         with:
           xgo_version: latest
-          go_version: stable
+          go_version: 1.21
           dest: dist
           pkg: cmd/sing-box
           prefix: sing-box
