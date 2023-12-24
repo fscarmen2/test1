@@ -1,0 +1,52 @@
+name: Cross compile Sing-box
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Sing-box:
+    name: Cross compile Sing-box
+    runs-on: ubuntu-20.04
+    env:
+      workdir: sing-box-source
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check the latest verion
+        run: |
+          [ -e README.md ] && NOW=$(awk '/^ - ### \*\*latest\*\*:/{print $NF}' README.md)
+          LATEST=$(wget -qO- "https://api.github.com/repos/SagerNet/sing-box/releases/latest" | awk -F '"' '/tag_name/{print $4}')
+          echo " NOW: $NOW"
+          echo " LATEST: $LATEST"
+          if [ "$NOW" != "$LATEST" ]; then
+            sed -i "/^ - ### \*\*latest\*\*:/s/\(.*: \).*/\1$LATEST/" README.md
+            echo "VERSION=$LATEST" >> $GITHUB_ENV
+          fi
+
+      - name: Git clone sing-box
+        if: ${{ env.VERSION != '' }}
+        env:
+          # GOOS: linux windows darwin
+          GOARCH: linux/arm linux/arm64 linux/386 linux/amd64 linux/mips linux/mipsle linux/s390x linux/riscv64
+        run: |
+          git clone --branch ${{ env.VERSION }} --single-branch https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
+          export COMMIT=$(git rev-parse --short HEAD)
+          export VERSION=$(go run ./cmd/internal/read_tag)
+          GOARCH="${{ env.GOARCH }}" go build -v -trimpath -tags "with_quic,with_grpc,with_dhcp,with_wireguard,with_ech,with_utls,with_reality_server,with_acme,with_clash_api,with_v2ray_api,with_gvisor" -o ${{ env.workdir }}/dist/sing-box_{{.Arch}} -ldflags "-X \"github.com/sagernet/sing-box/constant.Version=$VERSION\" -s -w -buildid=" ./cmd/sing-box
+
+      - name: Set up GoReleaser
+        if: ${{ env.VERSION != '' }}
+        uses: actions/setup-go@v5.0.0
+        with:
+          go-version: "stable"
+
+      - name: Release binaries
+        if: ${{ env.VERSION != '' }}
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          tag_name: ${{ env.VERSION }}
+          files: ${{ env.workdir }}/dist/*.tar.gz
