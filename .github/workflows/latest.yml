@@ -14,23 +14,9 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       DOCKERHUB_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
     steps:
-      - name: Checkout code My Repo
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-
-      - name: Checkout code xgo Repo
-        uses: actions/checkout@v4
-        with:
-          repository: crazy-max/ghaction-xgo
-          fetch-depth: 0
-
-      - name: Checkout code Sing-Box Repo
-        uses: actions/checkout@v4
-        with:
-          repository: SagerNet/sing-box
-          ref: main-next
-          path: sing-box
           fetch-depth: 0
 
       - name: Check the latest verion
