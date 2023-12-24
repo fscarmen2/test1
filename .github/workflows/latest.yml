@@ -6,7 +6,7 @@ on:
     - cron: 0 */12 * * *
 
 jobs:
-  release:
+  docker_pull:
     runs-on: ubuntu-latest
     name: "Build image & Pull Release"
     env:
@@ -17,7 +17,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          repository: SagerNet/sing-box
+          ref: main-next
+          path: sing-box
+          # fetch-depth: 0
 
       - name: Check the latest verion
         run: |
@@ -57,6 +60,7 @@ jobs:
             ${{ env.DOCKERHUB_REPOSITORY }}:${{ env.VERSION }}
 
       - name: Extract branch name
+        if: ${{ env.VERSION != '' }}
         run: |
           export TAG_NAME=$(echo ${GITHUB_REF#refs/tags/})
           echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
@@ -67,13 +71,13 @@ jobs:
         uses: crazy-max/ghaction-xgo@v3
         with:
           xgo_version: latest
-          go_version: latest
+          go_version: stable
           dest: dist
-          pkg: cmd/dashboard
+          pkg: cmd/sing-box
           prefix: sing-box
           targets: linux/amd64,linux/arm64,linux/arm-7
           v: true
-          x: false
+          x: true
           race: false
           tags: with_quic,with_grpc,with_dhcp,with_wireguard,with_ech,with_utls,with_reality_server,with_acme,with_clash_api,with_v2ray_api,with_gvisor
           ldflags: -s -w --extldflags '-static -fpic' -X github.com/SagerNet/sing-box/constant.Version=${{ steps.extract_branch.outputs.tag }}
