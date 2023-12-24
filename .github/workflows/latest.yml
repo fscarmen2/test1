@@ -41,6 +41,11 @@ jobs:
           export SB_COMMIT=$(git rev-parse --short HEAD)
           export SB_VERSION=$(go run ./cmd/internal/read_tag)
 
+      - name: Checkout code crazy-max/ghaction-xgo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: xgo build
         if: ${{ env.VERSION != '' }}
         uses: crazy-max/ghaction-xgo@v3
