@@ -7,7 +7,6 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
-      - VERSION=$(wget -qO- "https://api.github.com/repos/SagerNet/sing-box/releases/latest" | awk -F '"' '/tag_name/{print $4}')
     tags:
       - with_quic
       - with_grpc
@@ -21,7 +20,7 @@ builds:
       - with_v2ray_api
       - with_gvisor"
     ldflags:
-      -  -s -w --extldflags '-static -fpic' -X github.com/SagerNet/sing-box/constant.Version={{ env.VERSION }}
+      -  -s -w --extldflags '-static -fpic' -X github.com/SagerNet/sing-box/constant.Version=$VERSION
     goos:
       - linux
       - windows
