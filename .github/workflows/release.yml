@@ -46,7 +46,7 @@ jobs:
           go_version: 1.21
           dest: dist
           prefix: sing-box
-          targets: windows/amd64,linux/amd64,linux/arm64,darwin/arm64
+          targets: 386,amd64,arm,arm64
           v: true
           x: false
           race: false
