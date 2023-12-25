@@ -20,7 +20,7 @@ builds:
       - with_v2ray_api
       - with_gvisor"
     ldflags:
-      -  -s -w --extldflags '-static -fpic' "-X \"github.com/sagernet/sing-box/constant.Version=$VERSION\" SagerNet/sing-box/cmd/internal/read_tag/main.go
+      - "-s -w --extldflags '-static -fpic' -X 'github.com/sagernet/sing-box/constant.Version=$(go run github.com/sagernet/sing-box/cmd/internal/read_tag)'"
     goos:
       - linux
       - windows
