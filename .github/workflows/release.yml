@@ -24,6 +24,8 @@ jobs:
           echo " LATEST: $LATEST"
           if [ "$NOW" != "$LATEST" ]; then
             sed -i "/^ - ### \*\*latest\*\*:/s/\(.*: \).*/\1$LATEST/" README.md
+            sed -i "/^ - ### \*\*latest\*\*:/s/\(.*: \).*/\1$LATEST/" .github/sing-box.yml
+            sed -i "s/\(github.com\/sagernet\/sing-box\/constant.Version=\)[^[:space:]]*/\1$LATEST/" .github/sing-box.yml
             echo "VERSION=$LATEST" >> $GITHUB_ENV
           fi
 
