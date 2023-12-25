@@ -6,7 +6,7 @@ builds:
   - env:
       - CGO_ENABLED=0
     ldflags:
-      - -s -w --extldflags '-static -fpic' -X github.com/SagerNet/sing-box/constant.Version=$VERSION
+      -  -v -trimpath -tags "with_quic,with_grpc,with_dhcp,with_wireguard,with_ech,with_utls,with_reality_server,with_acme,with_clash_api,with_v2ray_api,with_gvisor" -ldflags "-X \"github.com/sagernet/sing-box/constant.Version=${{ env.VERSION }}\" -s -w
     goos:
       - linux
       - windows
