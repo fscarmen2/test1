@@ -1,7 +1,12 @@
-name: Cross compile Sing-box
+name: "3. Build & Pull latest release"
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["2. Build dev-next images"]
+    branches: [main]
+    types:
+      - completed
 
 jobs:
   Sing-box:
@@ -23,7 +28,6 @@ jobs:
           echo " NOW: $NOW"
           echo " LATEST: $LATEST"
           if [ "$NOW" != "$LATEST" ]; then
-            sed -i "/^ - ### \*\*latest\*\*:/s/\(.*: \).*/\1$LATEST/" README.md
             echo "VERSION=$LATEST" >> $GITHUB_ENV
           fi
 
@@ -50,7 +54,6 @@ jobs:
             release --clean 
             --auto-snapshot
         env:
-          VERSION: $(go run ./cmd/internal/read_tag)
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release binaries
