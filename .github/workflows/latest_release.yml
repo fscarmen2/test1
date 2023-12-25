@@ -55,7 +55,4 @@ jobs:
         with:
           tag_name: ${{ env.VERSION }}
           prerelease: false
-          files: |
-            ${{ env.workdir }}/dist/sing-box_darwin_*.tar.gz
-            ${{ env.workdir }}/dist/sing-box_linux_*.tar.gz
-            ${{ env.workdir }}/dist/sing-box_windows_*.zip
+          files: ${{ env.workdir }}/dist/*.tar.gz
