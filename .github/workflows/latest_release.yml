@@ -1,4 +1,4 @@
-name: "3. Build & Pull latest release"
+name: "4. Build & Pull latest release"
 
 on:
   workflow_dispatch:
