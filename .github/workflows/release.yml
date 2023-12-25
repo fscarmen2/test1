@@ -3,6 +3,10 @@ name: Cross compile Sing-box
 on:
   workflow_dispatch:
 
+before:
+  hooks:
+    - go mod tidy -v
+
 jobs:
   Sing-box:
     name: Cross compile Sing-box
@@ -34,13 +38,16 @@ jobs:
           export COMMIT=$(git rev-parse --short HEAD)
           export VERSION=$(go run ./cmd/internal/read_tag)
 
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Build
         uses: crazy-max/ghaction-xgo@v3
         with:
           xgo_version: latest
           go_version: 1.21
           dest: dist
-          prefix: myapp
+          prefix: sing-box
           targets: windows/amd64,linux/amd64,linux/arm64,darwin/arm64
           v: true
           x: false
