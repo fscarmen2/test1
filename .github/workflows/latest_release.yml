@@ -50,9 +50,7 @@ jobs:
           distribution: goreleaser
           version: latest
           workdir: ${{ env.workdir }}
-          args: |
-            release --clean 
-            --auto-snapshot
+          args: --auto-snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
