@@ -24,8 +24,6 @@ jobs:
           echo " LATEST: $LATEST"
           if [ "$NOW" != "$LATEST" ]; then
             sed -i "/^ - ### \*\*latest\*\*:/s/\(.*: \).*/\1$LATEST/" README.md
-            sed -i "/^ - ### \*\*latest\*\*:/s/\(.*: \).*/\1$LATEST/" .github/sing-box.yml
-            sed -i "s/\(github.com\/sagernet\/sing-box\/constant.Version=\)[^[:space:]]*/\1$LATEST/" .github/sing-box.yml
             echo "VERSION=$LATEST" >> $GITHUB_ENV
           fi
 
@@ -33,8 +31,6 @@ jobs:
         if: ${{ env.VERSION != '' }}
         run: |
           git clone https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
-          export COMMIT=$(git rev-parse --short HEAD)
-          export VERSION=$(go run ./cmd/internal/read_tag)
           cp .github/sing-box.yml ${{ env.workdir }}/.goreleaser.yml
 
       - name: Set up GoReleaser
@@ -50,8 +46,11 @@ jobs:
           distribution: goreleaser
           version: latest
           workdir: ${{ env.workdir }}
-          args: --auto-snapshot
+          args: |
+            release --clean 
+            --auto-snapshot
         env:
+          VERSION: $(go run ./cmd/internal/read_tag)
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release binaries
@@ -61,6 +60,4 @@ jobs:
           tag_name: ${{ env.VERSION }}
           prerelease: false
           files: |
-            ${{ env.workdir }}/dist/sing-box_darwin_*.tar.gz
-            ${{ env.workdir }}/dist/sing-box_linux_*.tar.gz
-            ${{ env.workdir }}/dist/sing-box_linux_*.zip
+            ${{ env.workdir }}/dist/*.zip
