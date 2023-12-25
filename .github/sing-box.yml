@@ -20,7 +20,7 @@ builds:
       - with_v2ray_api
       - with_gvisor"
     ldflags:
-      -  -s -w --extldflags '-static -fpic' -X github.com/SagerNet/sing-box/constant.Version=$(go run ./cmd/internal/read_tag)
+      -  -s -w --extldflags '-static -fpic' -X github.com/SagerNet/sing-box/constant.Version=$(awk '/^ - ### \*\*latest\*\*:/{print $NF}' README.md)
     goos:
       - linux
       - windows
