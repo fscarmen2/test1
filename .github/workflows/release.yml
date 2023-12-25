@@ -3,10 +3,6 @@ name: Cross compile Sing-box
 on:
   workflow_dispatch:
 
-before:
-  hooks:
-    - go mod tidy -v
-
 jobs:
   Sing-box:
     name: Cross compile Sing-box
@@ -33,6 +29,8 @@ jobs:
 
       - name: Git clone sing-box
         if: ${{ env.VERSION != '' }}
+        hooks:
+          - go mod tidy -v
         run: |
           git clone --branch ${{ env.VERSION }} --single-branch https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
           export COMMIT=$(git rev-parse --short HEAD)
