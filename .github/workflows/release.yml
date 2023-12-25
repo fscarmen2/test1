@@ -33,6 +33,8 @@ jobs:
         if: ${{ env.VERSION != '' }}
         run: |
           git clone https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
+          export COMMIT=$(git rev-parse --short HEAD)
+          export VERSION=$(go run ./cmd/internal/read_tag)
           cp .github/sing-box.yml ${{ env.workdir }}/.goreleaser.yml
 
       - name: Set up GoReleaser
