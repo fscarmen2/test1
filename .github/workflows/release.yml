@@ -29,24 +29,25 @@ jobs:
 
       - name: Git clone sing-box
         if: ${{ env.VERSION != '' }}
-        goos:
-          - linux
-          - windows
-          - darwin
-        goarch:
-          - arm
-          - arm64
-          - 386
-          - amd64
-          - mips
-          - mipsle
-          - s390x
-          - riscv64
         run: |
           git clone --branch ${{ env.VERSION }} --single-branch https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
           export COMMIT=$(git rev-parse --short HEAD)
           export VERSION=$(go run ./cmd/internal/read_tag)
-          GOARCH="${{ goarch }}" go build -v -trimpath -tags "with_quic,with_grpc,with_dhcp,with_wireguard,with_ech,with_utls,with_reality_server,with_acme,with_clash_api,with_v2ray_api,with_gvisor" -o ${{ env.workdir }}/dist/sing-box_{{.Arch}} -ldflags "-X \"github.com/sagernet/sing-box/constant.Version=$VERSION\" -s -w -buildid=" ./cmd/sing-box
+
+      - name: Build
+        uses: crazy-max/ghaction-xgo@v3
+        with:
+          xgo_version: latest
+          go_version: 1.21
+          dest: dist
+          prefix: myapp
+          targets: windows/amd64,linux/amd64,linux/arm64,darwin/arm64
+          v: true
+          x: false
+          race: false
+          ldflags: -trimpath -tags "with_quic,with_grpc,with_dhcp,with_wireguard,with_ech,with_utls,with_reality_server,with_acme,with_clash_api,with_v2ray_api,with_gvisor" -ldflags "-X \"github.com/sagernet/sing-box/constant.Version=$VERSION\" -s -w -buildid=" ${{ env.workdir }}/sing-box/cmd/sing-box
+          buildmode: default
+          trimpath: true
 
       - name: Set up GoReleaser
         if: ${{ env.VERSION != '' }}
