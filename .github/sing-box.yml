@@ -8,7 +8,7 @@ builds:
   - env:
       - CGO_ENABLED=0
     ldflags:
-      - -v -trimpath -tags "with_quic,with_grpc,with_dhcp,with_wireguard,with_ech,with_utls,with_reality_server,with_acme,with_clash_api,with_v2ray_api,with_gvisor" -ldflags "-X \"github.com/sagernet/sing-box/constant.Version=v1.10.1\" -s -w
+      -  -s -w -tags "with_quic,with_grpc,with_dhcp,with_wireguard,with_ech,with_utls,with_reality_server,with_acme,with_clash_api,with_v2ray_api,with_gvisor" -ldflags "-X \"github.com/sagernet/sing-box/constant.Version=v1.7.1\"
     goos:
       - linux
       - windows
