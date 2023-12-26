@@ -2,11 +2,6 @@ name: "4. Build & Pull latest release"
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["3. Change Version"]
-    branches: [main]
-    types:
-      - completed
 
 jobs:
   Sing-box:
@@ -21,22 +16,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check the latest verion
-        run: |
-          [ -e README.md ] && NOW=$(awk '/^ - ### \*\*latest\*\*:/{print $NF}' README.md)
-          LATEST=$(wget -qO- "https://api.github.com/repos/SagerNet/sing-box/releases/latest" | awk -F '"' '/tag_name/{print $4}')
-          echo " NOW: $NOW"
-          echo " LATEST: $LATEST"
-          if [ "$NOW" != "$LATEST" ]; then
-            echo "VERSION=$LATEST" >> $GITHUB_ENV
-          fi
-
       - name: Git clone sing-box
         if: ${{ env.VERSION != '' }}
         run: |
-          git clone --branch ${{ env.VERSION }} https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
-          cp .github/sing-box.yml ${{ env.workdir }}/.goreleaser.yml
-          sed -i "s/ChangeSingBoxVersion/$LATEST/" ${{ env.workdir }}/.goreleaser.yml
+          [ -e README.md ] && NOW=$(awk '/^ - ### \*\*latest\*\*:/{print $NF}' README.md)
+          LATEST=$(wget -qO- "https://api.github.com/repos/SagerNet/sing-box/releases/latest" | awk -F '"' '/tag_name/{print $4}')
+          if [ "$NOW" != "$LATEST" ]; then
+            git clone --branch ${{ env.VERSION }} https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
+            cp .github/sing-box.yml ${{ env.workdir }}/.goreleaser.yml
+            sed -i "s/ChangeSingBoxVersion/$LATEST/" ${{ env.workdir }}/.goreleaser.yml
+          fi
 
       - name: Set up GoReleaser
         if: ${{ env.VERSION != '' }}
