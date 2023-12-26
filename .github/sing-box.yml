@@ -9,6 +9,7 @@ builds:
       - CGO_ENABLED=0
     flags:
       - v
+      - -trimpath
     tags:
       - with_quic
       - with_grpc
@@ -20,7 +21,7 @@ builds:
       - with_acme
       - with_clash_api
       - with_v2ray_api
-      - with_gvisor"
+      - with_gvisor
     ldflags:
       - -s -w -X github.com/SagerNet/sing-box/constant.Version=$VERSION
     goos:
