@@ -2,6 +2,11 @@ name: "4. Build & Pull latest release"
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["3. Change Version"]
+    branches: [main]
+    types:
+      - completed
 
 jobs:
   Sing-box:
@@ -29,7 +34,9 @@ jobs:
       - name: Git clone sing-box
         if: ${{ env.VERSION != '' }}
         run: |
-          git clone https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
+          git clone --branch main-next https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
+          export COMMIT=$(git rev-parse --short HEAD)
+          export VERSION=$(go run ./cmd/internal/read_tag)
           cp .github/sing-box.yml ${{ env.workdir }}/.goreleaser.yml
 
       - name: Set up GoReleaser
