@@ -7,6 +7,9 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+    flags:
+      - v
+      - 
     tags:
       - with_quic
       - with_grpc
@@ -20,7 +23,7 @@ builds:
       - with_v2ray_api
       - with_gvisor"
     ldflags:
-      - -s -w -X github.com/SagerNet/sing-box/constant.Version=$VERSION
+      - -s -w -X "github.com/SagerNet/sing-box/constant.Version=${{ env.VERSION }}"
     goos:
       - linux
       - windows
