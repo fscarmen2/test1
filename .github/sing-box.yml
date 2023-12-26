@@ -23,7 +23,7 @@ builds:
       - with_v2ray_api
       - with_gvisor
     ldflags:
-      - -s -w -X github.com/SagerNet/sing-box/constant.Version=ChangeSingBoxVersion
+      - -s -w -X 'github.com/SagerNet/sing-box/constant.Version=ChangeSingBoxVersion'"
     goos:
       - linux
       - windows
