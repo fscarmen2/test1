@@ -28,7 +28,6 @@ jobs:
           echo " NOW: $NOW"
           echo " LATEST: $LATEST"
           if [ "$NOW" != "$LATEST" ]; then
-            sed -i 's/constant.Version=[^[:space:]]*/constant.Version='"$LATEST"'/g' README.md
             echo "VERSION=$LATEST" >> $GITHUB_ENV
           fi
 
@@ -37,6 +36,7 @@ jobs:
         run: |
           git clone --branch ${{ env.VERSION }} https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
           cp .github/sing-box.yml ${{ env.workdir }}/.goreleaser.yml
+          sed -i 's/constant.Version=[^[:space:]]*/constant.Version='"$LATEST"'/g' README.md
 
       - name: Set up GoReleaser
         if: ${{ env.VERSION != '' }}
