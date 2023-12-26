@@ -28,7 +28,7 @@ jobs:
           echo " NOW: $NOW"
           echo " LATEST: $LATEST"
           if [ "$NOW" != "$LATEST" ]; then
-            sed -i "s/github.com/SagerNet/sing-box/constant.Version=[^[:space:]]*/github.com/SagerNet/sing-box/constant.Version=$LATEST/g" README.md
+            sed -i 's/constant.Version=[^[:space:]]*/constant.Version='"$LATEST"'/g' README.md
             echo "VERSION=$LATEST" >> $GITHUB_ENV
           fi
 
@@ -54,7 +54,6 @@ jobs:
           args: --auto-snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SB_VERSION: ${{ env.VERSION }}
 
       - name: Release binaries
         if: ${{ env.VERSION != '' }}
