@@ -34,9 +34,7 @@ jobs:
       - name: Git clone sing-box
         if: ${{ env.VERSION != '' }}
         run: |
-          git clone --branch main-next https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
-          export COMMIT=$(git rev-parse --short HEAD)
-          export VERSION=$(go run ./cmd/internal/read_tag)
+          git clone --branch ${{ env.VERSION }} https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
           cp .github/sing-box.yml ${{ env.workdir }}/.goreleaser.yml
 
       - name: Set up GoReleaser
@@ -55,6 +53,7 @@ jobs:
           args: --auto-snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SB_VERSION: ${{ env.VERSION }}
 
       - name: Release binaries
         if: ${{ env.VERSION != '' }}
