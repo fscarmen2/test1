@@ -28,6 +28,7 @@ jobs:
           echo " NOW: $NOW"
           echo " LATEST: $LATEST"
           if [ "$NOW" != "$LATEST" ]; then
+            sed -i "s/github.com/SagerNet/sing-box/constant.Version=[^[:space:]]*/github.com/SagerNet/sing-box/constant.Version=$LATEST/g" README.md
             echo "VERSION=$LATEST" >> $GITHUB_ENV
           fi
 
