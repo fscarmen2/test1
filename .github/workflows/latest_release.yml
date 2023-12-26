@@ -2,6 +2,11 @@ name: "4. Build & Pull latest release"
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["3. Change Version"]
+    branches: [main]
+    types:
+      - completed
 
 jobs:
   Sing-box:
@@ -21,10 +26,11 @@ jobs:
         run: |
           [ -e README.md ] && NOW=$(awk '/^ - ### \*\*latest\*\*:/{print $NF}' README.md)
           LATEST=$(wget -qO- "https://api.github.com/repos/SagerNet/sing-box/releases/latest" | awk -F '"' '/tag_name/{print $4}')
+          git clone https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
+          cp .github/sing-box.yml ${{ env.workdir }}/.goreleaser.yml
+          sed -i "s/ChangeSingBoxVersion/$LATEST/" ${{ env.workdir }}/.goreleaser.yml
           if [ "$NOW" != "$LATEST" ]; then
-            git clone --branch ${{ env.VERSION }} https://github.com/SagerNet/sing-box.git ${{ env.workdir }}
-            cp .github/sing-box.yml ${{ env.workdir }}/.goreleaser.yml
-            sed -i "s/ChangeSingBoxVersion/$LATEST/" ${{ env.workdir }}/.goreleaser.yml
+            echo "VERSION=$LATEST" >> $GITHUB_ENV
           fi
 
       - name: Set up GoReleaser
